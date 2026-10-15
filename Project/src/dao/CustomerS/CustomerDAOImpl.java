@@ -15,23 +15,27 @@ public class CustomerDAOImpl implements CustomerDAO {
     public boolean saveCustomer(Customer customer) throws SQLException {
         String sql = "insert into customer(is_deleted,customer_name,customer_age,customer_sex,idcard,room_no,building_no,checkin_date,expiration_date,contact_tel,bed_id,psychosomatic_state,attention,birthday,height,weight,blood_type,filepath,user_id,level_id,family_number) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        Object[] object = {customer.getIs_deleted(),customer.getCustomer_name(),customer.getCustomer_age(),customer.getCustomer_sex(),customer.getIdcard(),customer.getRoom_no(),customer.getBuilding_no(), (Date) customer.getCheckin_date(),(Date) customer.getExpiration_date(),customer.getContact_tel(), customer.getBed_id(),customer.getPsychosomatic_state(),customer.getAttention(),(Date) customer.getBirthday(),customer.getHeight(),customer.getWeight(),customer.getBlood_type(),customer.getFilepath(),customer.getUser_id(),customer.getLevel_id(),customer.getFamily_number()};
+        Object[] object = {customer.getIs_deleted(),customer.getCustomer_name(),customer.getCustomer_age(),customer.getCustomer_sex(),customer.getIdcard(),customer.getRoom_no(),customer.getBuilding_no(), toSqlDate(customer.getCheckin_date()),toSqlDate(customer.getExpiration_date()),customer.getContact_tel(), customer.getBed_id(),customer.getPsychosomatic_state(),customer.getAttention(),toSqlDate(customer.getBirthday()),customer.getHeight(),customer.getWeight(),customer.getBlood_type(),customer.getFilepath(),customer.getUser_id(),customer.getLevel_id(),customer.getFamily_number()};
         return CRUDUtils.update(sql, object);
     }
 
     @Override
     public boolean updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE customer SET is_deleted = ?, customer_name = ?, customer_age = ?, customer_sex = ?, idcard = ?, room_no = ?, building_no = ?, checkin_date = ?, expiration_date = ?, contact_tel = ?, bed_id = ?, psychosomatic_state = ?, attention = ?, birthday = ?, height = ?, weight = ?, blood_type = ?, filepath = ?, user_id = ?, level_id = ?, family_member = ? where id = ?";
+        String sql = "UPDATE customer SET is_deleted = ?, customer_name = ?, customer_age = ?, customer_sex = ?, idcard = ?, room_no = ?, building_no = ?, checkin_date = ?, expiration_date = ?, contact_tel = ?, bed_id = ?, psychosomatic_state = ?, attention = ?, birthday = ?, height = ?, weight = ?, blood_type = ?, filepath = ?, user_id = ?, level_id = ?, family_number = ? where id = ?";
 
-        Object[] object = {customer.getIs_deleted(),customer.getCustomer_name(),customer.getCustomer_age(),customer.getCustomer_sex(),customer.getIdcard(),customer.getRoom_no(),customer.getBuilding_no(), (Date) customer.getCheckin_date(),(Date) customer.getExpiration_date(),customer.getContact_tel(), customer.getBed_id(),customer.getPsychosomatic_state(),customer.getAttention(),(Date) customer.getBirthday(),customer.getHeight(),customer.getWeight(),customer.getBlood_type(),customer.getFilepath(),customer.getUser_id(),customer.getLevel_id(),customer.getFamily_number(),customer.getId()};
+        Object[] object = {customer.getIs_deleted(),customer.getCustomer_name(),customer.getCustomer_age(),customer.getCustomer_sex(),customer.getIdcard(),customer.getRoom_no(),customer.getBuilding_no(), toSqlDate(customer.getCheckin_date()),toSqlDate(customer.getExpiration_date()),customer.getContact_tel(), customer.getBed_id(),customer.getPsychosomatic_state(),customer.getAttention(),toSqlDate(customer.getBirthday()),customer.getHeight(),customer.getWeight(),customer.getBlood_type(),customer.getFilepath(),customer.getUser_id(),customer.getLevel_id(),customer.getFamily_number(),customer.getId()};
         return CRUDUtils.update(sql, object);
+    }
+
+    private java.sql.Date toSqlDate(java.util.Date date) {
+        return date == null ? null : new java.sql.Date(date.getTime());
     }
 
 
 
     @Override
     public boolean deleteCustomer(Integer id) throws SQLException {
-        String sql = "DELETE FROM customer WHERE id = ?";
+        String sql = "UPDATE customer SET is_deleted = 1 WHERE id = ?";
 
         Object[] object = {id};
         return CRUDUtils.update(sql, object);

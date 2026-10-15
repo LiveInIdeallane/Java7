@@ -7,6 +7,8 @@ import utils.JdbcUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class BackdownDAOImpl implements BackdownDAO {
@@ -20,9 +22,16 @@ public class BackdownDAOImpl implements BackdownDAO {
 
     @Override
     public boolean updateBackdown(Backdown backdown) throws SQLException {
-        String sql = "UPDATE backdown SET (remarks, is_deleted, customer_id, retreattime, retreattype, retreatreason, auditstatus, auditperson, audittime) = (?, ?, ?, ?, ?, ?, ?, ?, ?) WHERE id = ?;";
-        Object[] params = {backdown.getRemarks(),backdown.getIs_delete(),backdown.getCustomer_id(),backdown.getRetreattime(),backdown.getRetreattype(),backdown.getRetreatreason(),backdown.getAuditstatus(),backdown.getAuditperson(),backdown.getAudittime(),backdown.getId()};
+        String sql = "UPDATE backdown SET remarks = ?, is_deleted = ?, customer_id = ?, retreattime = ?, retreattype = ?, retreatreason = ?, auditstatus = ?, auditperson = ?, audittime = ? WHERE id = ?";
+        Object[] params = {backdown.getRemarks(),backdown.getIs_delete(),backdown.getCustomer_id(),
+                toTimestamp(backdown.getRetreattime()),backdown.getRetreattype(),backdown.getRetreatreason(),
+                backdown.getAuditstatus(),backdown.getAuditperson(),toTimestamp(backdown.getAudittime()),
+                backdown.getId()};
         return CRUDUtils.update(sql,params);
+    }
+
+    private Timestamp toTimestamp(Date date) {
+        return date == null ? null : new Timestamp(date.getTime());
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,11 @@ public class OutwardDAOImpl implements OutwardDAO {
     @Override
     public Boolean saveOutward(Outward outward) throws SQLException {
         String sql = "INSERT into outward values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        Object[] params = {outward.getId(),outward.getRemarks(),outward.getIs_delete(),outward.getCustomer_id(),outward.getOutgoingreason(),outward.getOutgoingtime(),outward.getExpectedreturntime(),outward.getActualreturntime(),outward.getEscortedtel(),outward.getAuditstatus(),outward.getAuditperson(),outward.getAudittime()};
+        Object[] params = {outward.getId(),outward.getRemarks(),outward.getIs_delete(),outward.getCustomer_id(),
+                outward.getOutgoingreason(),toTimestamp(outward.getOutgoingtime()),
+                toTimestamp(outward.getExpectedreturntime()),toTimestamp(outward.getActualreturntime()),
+                outward.getEscorted(),outward.getRelation(),outward.getEscortedtel(),
+                outward.getAuditstatus(),outward.getAuditperson(),toTimestamp(outward.getAudittime())};
         return CRUDUtils.update(sql,params);
     }
 
@@ -31,9 +36,18 @@ public class OutwardDAOImpl implements OutwardDAO {
 
     @Override
     public Boolean updateOutward(Outward outward) throws SQLException {
-        String sql = "UPDATE outward SET remarks = ?, is_deleted = ?, customer_id = ?, outgoingreason = ?, outgoingtime = ?, epectedreturntime = ?, actualreturntime = ?, escorted = ?, relation = ?, escortedtel = ?, auditstatus = ?, auditperson = ?, audittime = ? where id = ?";
-        Object[] params = {outward.getRemarks(),outward.getIs_delete(),outward.getCustomer_id(),outward.getOutgoingreason(),outward.getOutgoingtime(),outward.getExpectedreturntime(),outward.getActualreturntime(),outward.getEscortedtel(),outward.getAuditstatus(),outward.getAuditperson(),outward.getAudittime(),outward.getId()};
+        String sql = "UPDATE outward SET remarks = ?, is_deleted = ?, customer_id = ?, outgoingreason = ?, outgoingtime = ?, expectedreturntime = ?, actualreturntime = ?, escorted = ?, relation = ?, escortedtel = ?, auditstatus = ?, auditperson = ?, audittime = ? where id = ?";
+        Object[] params = {outward.getRemarks(),outward.getIs_delete(),outward.getCustomer_id(),
+                outward.getOutgoingreason(),toTimestamp(outward.getOutgoingtime()),
+                toTimestamp(outward.getExpectedreturntime()),toTimestamp(outward.getActualreturntime()),
+                outward.getEscorted(),outward.getRelation(),outward.getEscortedtel(),
+                outward.getAuditstatus(),outward.getAuditperson(),toTimestamp(outward.getAudittime()),
+                outward.getId()};
         return CRUDUtils.update(sql,params);
+    }
+
+    private Timestamp toTimestamp(Date date) {
+        return date == null ? null : new Timestamp(date.getTime());
     }
 
     @Override
@@ -50,6 +64,6 @@ public class OutwardDAOImpl implements OutwardDAO {
         Object[] params = {};
         List<Outward> outward = CRUDUtils.select(sql,params,Outward.class);
 
-        return List.of();
+        return outward;
     }
 }

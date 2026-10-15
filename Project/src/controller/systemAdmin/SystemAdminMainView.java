@@ -1,13 +1,15 @@
 package controller.systemAdmin;
 
-import java.util.Scanner;
+import controller.systemAdmin.bedcontroller.BedController;
+import controller.systemAdmin.customercontroller.CustomerController;
+import controller.systemAdmin.managercontroller.ManagerController;
+import controller.systemAdmin.nursecontroller.NurseController;
+import controller.systemAdmin.usercontroller.UserController;
 
 /**
  * 主界面 Controller：登录成功后的主菜单，只做跳转。
  */
 public class SystemAdminMainView {
-
-    private static final Scanner scanner = new Scanner(System.in);
 
     public static void menu() {
         while (true) {
@@ -18,20 +20,24 @@ public class SystemAdminMainView {
             System.out.println("2、用户管理");
             System.out.println("3、床位管理");
             System.out.println("4、护理管理");
-            System.out.println("5、食物管理");
+            System.out.println("5、健康管家");
             System.out.println("0、退出系统");
-            System.out.print("请输入序号：");
-
-            String select = scanner.nextLine();
+            String select = ConsoleTools.input("请输入序号：");
             switch (select) {
                 case "1":
                     CustomerController.menu();
                     break;
                 case "2":
+                    UserController.menu();
+                    break;
                 case "3":
+                    BedController.menu();
+                    break;
                 case "4":
+                    NurseController.menu();
+                    break;
                 case "5":
-                    System.out.println("【该模块】开发中...");
+                    ManagerController.menu();
                     break;
                 case "0":
                     System.out.println("感谢使用，再见！");

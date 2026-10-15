@@ -128,4 +128,15 @@ public class BedDetailsServiceImpl implements BedDetailsService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Boolean logicDeleteActiveByCustomer(int id) {
+        try {
+            BedDetails details = bedDetailsDAO.findActiveByCustomerId(id);
+            return details != null && bedDetailsDAO.logicDelete(details.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

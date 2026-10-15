@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CustomernurseitemServiceImpl implements CustomernurseitemService {
 
@@ -194,7 +196,18 @@ public class CustomernurseitemServiceImpl implements CustomernurseitemService {
 
     @Override
     public List<Integer> findCustomerIdsWithNurseItems() {
-        return new ArrayList<>();
+        Set<Integer> ids = new LinkedHashSet<>();
+        try {
+            for (Customernurseitem item : cusDAO.findAll()) {
+                if (item.getCustomer_id() != null
+                        && (item.getIs_deleted() == null || item.getIs_deleted() == 0)) {
+                    ids.add(item.getCustomer_id());
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new ArrayList<>(ids);
     }
 
 

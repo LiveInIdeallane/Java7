@@ -17,7 +17,7 @@ public class NursecontentDaoImpl implements NursecontentDao {
         }
         @Override
         public boolean update(Nursecontent obj) throws SQLException {
-            String sql = "update Nursecontent set serial_number=?,nursing_name=?,service_price=?,message=?,status=?,execution_cycle=?,execution_times=?,is_deleted where id=?";
+            String sql = "update Nursecontent set serial_number=?,nursing_name=?,service_price=?,message=?,status=?,execution_cycle=?,execution_times=?,is_deleted=? where id=?";
             Object[] objects =
                     {obj.getSerial_number(),obj.getNursing_name(),obj.getService_price(),obj.getMessage(),obj.getStatus(),obj.getExecution_cycle(),obj.getExecution_times(),obj.getIs_deleted(),obj.getId()};
             return CRUDUtils.update(sql,objects);

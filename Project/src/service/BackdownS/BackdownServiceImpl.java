@@ -1,6 +1,7 @@
 package service.BackdownS;
 
 import dao.BackdownS.BackdownDAO;
+import dao.BackdownS.BackdownDAOImpl;
 import entity.BackdownS.Backdown;
 import utils.*;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class BackdownServiceImpl implements BackdownService {
 
-    private BackdownDAO backdownDAO;
+    private BackdownDAO backdownDAO = new BackdownDAOImpl();
 
     @Override
     public boolean createBackdown(Backdown backdown) {

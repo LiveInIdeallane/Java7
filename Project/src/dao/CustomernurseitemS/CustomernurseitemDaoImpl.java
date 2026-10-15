@@ -14,31 +14,50 @@ public class CustomernurseitemDaoImpl implements CustomernurseitemDao {
         String sql = "insert into Customernurseitem(id,item_id,customer_id,level_id,nurse_number,is_deleted,buy_time,maturity_time ) values(?,?,?,?,?,?,?,?)";
         Connection conn = JdbcUtils.getConnection();
         PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setInt(1,obj.getId());
-        stat.setInt(2,obj.getItem_id());
-        stat.setInt(3,obj.getCustomer_id());
-        stat.setInt(4,obj.getLevel_id());
-        stat.setInt(5,obj.getNurse_number());
-        stat.setInt(6,obj.getIs_deleted());
-        stat.setDate(7, (Date) obj.getBuy_time());
-        stat.setDate(8, (Date) obj.getMaturity_time());
+        stat.setObject(1, obj.getId() == null ? nextId(conn) : obj.getId());
+        stat.setObject(2,obj.getItem_id());
+        stat.setObject(3,obj.getCustomer_id());
+        stat.setObject(4,obj.getLevel_id());
+        stat.setObject(5,obj.getNurse_number());
+        stat.setObject(6,obj.getIs_deleted());
+        stat.setDate(7, toSqlDate(obj.getBuy_time()));
+        stat.setDate(8, toSqlDate(obj.getMaturity_time()));
         int row = stat.executeUpdate();
         return row>0?true:false;
     }
 
+    private synchronized int nextId(Connection conn) throws SQLException {
+        int newId = 1;
+        PreparedStatement ps = null;
+        ResultSet r = null;
+        try {
+            ps = conn.prepareStatement("select ifnull(max(id),0)+1 from Customernurseitem");
+            r = ps.executeQuery();
+            if (r.next()) newId = r.getInt(1);
+        } finally {
+            if (r != null) r.close();
+            if (ps != null) ps.close();
+        }
+        return newId;
+    }
+
+    private java.sql.Date toSqlDate(java.util.Date date) {
+        return date == null ? null : new java.sql.Date(date.getTime());
+    }
+
     @Override
     public boolean update(Customernurseitem obj) throws SQLException {
-        String sql="update Customrnurseitem set item_id=?,customer_id=?,level_id=?,nurse_number=?,is_deleted=?,buy_time=?,maturity_time=? where id=?";
+        String sql="update Customernurseitem set item_id=?,customer_id=?,level_id=?,nurse_number=?,is_deleted=?,buy_time=?,maturity_time=? where id=?";
         Connection conn = JdbcUtils.getConnection();
         PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setInt(1,obj.getItem_id());
-        stat.setInt(2,obj.getCustomer_id());
-        stat.setInt(3,obj.getLevel_id());
-        stat.setInt(4,obj.getNurse_number());
-        stat.setInt(5,obj.getIs_deleted());
-        stat.setDate(6, (Date) obj.getBuy_time());
-        stat.setDate(7, (Date) obj.getMaturity_time());
-        stat.setInt(8,obj.getId());
+        stat.setObject(1,obj.getItem_id());
+        stat.setObject(2,obj.getCustomer_id());
+        stat.setObject(3,obj.getLevel_id());
+        stat.setObject(4,obj.getNurse_number());
+        stat.setObject(5,obj.getIs_deleted());
+        stat.setDate(6, toSqlDate(obj.getBuy_time()));
+        stat.setDate(7, toSqlDate(obj.getMaturity_time()));
+        stat.setObject(8,obj.getId());
         int row = stat.executeUpdate();
         return row>0?true:false;
     }
@@ -95,6 +114,6 @@ public class CustomernurseitemDaoImpl implements CustomernurseitemDao {
            list.add(obj);
        }
 
-        return findAll();
+        return list;
     }}
 

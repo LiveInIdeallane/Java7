@@ -6,7 +6,9 @@ import dao.RoomS.RoomDAOImpl;
 import entity.RoomS.Room;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +108,24 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Map<String, List<String>> getRoomsGroupByFloor() {
-        return new HashMap<>();
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        try {
+            for (Room room : roomDAO.findAll()) {
+                String floor = room.getRoom_floor();
+                if (floor == null) {
+                    floor = "-";
+                }
+                List<String> rooms = result.get(floor);
+                if (rooms == null) {
+                    rooms = new ArrayList<>();
+                    result.put(floor, rooms);
+                }
+                rooms.add(room.getRoom_no() == null ? "" : String.valueOf(room.getRoom_no()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
 
 }
