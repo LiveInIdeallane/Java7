@@ -1,6 +1,7 @@
-package controller;
+package controller.systemAdmin;
 
 import entity.BackdownS.Backdown;
+import entity.BedS.Bed;
 import entity.CustomerS.Customer;
 import entity.OutwardS.Outward;
 import service.BackdownS.BackdownService;
@@ -18,6 +19,7 @@ import service.OutwardS.OutwardServiceImpl;
 import service.RoomS.RoomService;
 import service.RoomS.RoomServiceImpl;
 import utils.Tools;
+import controller.LoginController;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -218,7 +220,7 @@ public class CustomerController {
         }
 
         //床位号：根据房间号联动获取空闲床位
-        List<Integer> freeBeds = bedService.getFreeBedIdsByRoom(roomNo);
+        List<Bed> freeBeds = bedService.getFreeBedsByRoomNo(Integer.parseInt(roomNo));
         if (freeBeds.isEmpty()) {
             System.out.println("该房间没有空闲床位！");
             return;
@@ -329,7 +331,7 @@ public class CustomerController {
             }
             //合同到期时间变化 -> 更新当前生效床位信息的退住时间
             if (expirationChanged) {
-                bedDetailsService.updateActiveEndDate(id, expiration);
+                bedDetailsService.updateEndDate(id, expiration);
             }
             System.out.println("修改成功！");
         } catch (NumberFormatException | ParseException e) {
@@ -541,7 +543,7 @@ public class CustomerController {
         if (result == AUDIT_PASS) {
             Customer c = customerService.findCustomerById(o.getCustomer_id());
             if (c != null && c.getBed_id() != null) {
-                bedService.setBedOut(c.getBed_id());
+                bedService.changeBedStatus(c.getBed_id(),1);
             }
         }
         System.out.println("审核完成！");
