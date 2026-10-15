@@ -128,4 +128,9 @@ public class BedDetailsServiceImpl implements BedDetailsService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public boolean logicDeleteActiveByCustomer(Integer customerId) {
+        return false;
+    }
 }

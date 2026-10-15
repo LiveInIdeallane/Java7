@@ -250,4 +250,10 @@ public class BedServiceImpl implements BedService {
             throw new RuntimeException(e);
         }
     }
+
+    /** 把床位置为空闲(可用)：删除客户、退住审核通过(正常/死亡)时调用 */
+    @Override
+    public boolean freeBed(Integer bedId) {
+        return false;
+    }
 }

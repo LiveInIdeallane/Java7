@@ -1,11 +1,14 @@
 package service.BedS;
 
-
 import entity.BedS.Bed;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 床位模块对外服务（接口先行，由 BedS 负责人实现）。
+ * 约定状态：1空闲(可用) 2有人 3外出。
+ */
 public interface BedService {
 
     /** 新增床位 */
@@ -37,4 +40,9 @@ public interface BedService {
     List<String> getAllFloors();
 
     boolean changeBed(Integer customerId, Integer newBedId);
+
+    /** 把床位置为空闲(可用)：删除客户、退住审核通过(正常/死亡)时调用 */
+    boolean freeBed(Integer bedId);
+
+
 }

@@ -34,4 +34,7 @@ public interface BedDetailsService {
 
     /** 逻辑删除 */
     boolean logicDelete(Integer id);
+
+    /** 逻辑删除该客户当前生效的使用记录（删除客户时调用） */
+    boolean logicDeleteActiveByCustomer(Integer customerId);
 }

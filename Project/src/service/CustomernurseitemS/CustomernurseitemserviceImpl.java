@@ -7,10 +7,11 @@ import utils.JdbcUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CustomernurseitemserviceImpl implements Customernurseitemservice {
+public class CustomernurseitemServiceImpl implements CustomernurseitemService {
 
     private CustomernurseitemDao cusDAO = new CustomernurseitemDaoImpl();
 
@@ -190,4 +191,11 @@ public class CustomernurseitemserviceImpl implements Customernurseitemservice {
     public List<Customernurseitem> findAllCustomernurseitem() throws SQLException {
         return cusDAO.findAll();
     }
+
+    @Override
+    public List<Integer> findCustomerIdsWithNurseItems() {
+        return new ArrayList<>();
+    }
+
+
 }

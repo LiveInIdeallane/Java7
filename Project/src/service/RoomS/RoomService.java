@@ -4,6 +4,7 @@ package service.RoomS;
 import entity.RoomS.Room;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RoomService {
 
@@ -27,4 +28,10 @@ public interface RoomService {
 
     /** 查询所有楼层（去重） */
     List<String> getAllFloors();
+
+    //从CustomerController添加的新方法
+    Map<String, List<String>> getRoomsGroupByFloor();
+
+
+
 }

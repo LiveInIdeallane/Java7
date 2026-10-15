@@ -6,7 +6,9 @@ import dao.RoomS.RoomDAOImpl;
 import entity.RoomS.Room;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomServiceImpl implements RoomService {
 
@@ -101,4 +103,10 @@ public class RoomServiceImpl implements RoomService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Map<String, List<String>> getRoomsGroupByFloor() {
+        return new HashMap<>();
+    }
+
 }
