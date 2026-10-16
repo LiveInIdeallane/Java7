@@ -32,6 +32,6 @@ public class Customer {
     private String filepath;
     private Integer user_id;
     private Integer level_id;
-    private String family_number;
+    private String family_member;
 
 }
