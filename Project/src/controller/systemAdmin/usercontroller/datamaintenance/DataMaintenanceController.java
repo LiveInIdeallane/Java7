@@ -12,6 +12,7 @@ import service.RoleS.RoleServiceImpl;
 import service.UserS.UserService;
 import service.UserS.UserServiceImpl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,7 +127,11 @@ public class DataMaintenanceController {
             System.out.println("真实姓名和登录编码不能为空！");
             return;
         }
-        userService.save(user);
+        try {
+            userService.save(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("新增成功！默认密码为手机号后6位：" + user.getPassword());
     }
 

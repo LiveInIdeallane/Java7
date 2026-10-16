@@ -26,7 +26,7 @@ public class JdbcUtils {
         if(conn==null){
 
             //大家从github从仓库下载项目结构后，注意在这里修改自己数据库的信息！
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/??????","??????","??????");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_service","root","123456");
             tl.set(conn);
         }
         return conn;

@@ -18,4 +18,6 @@ public class Customernurseitem {
     private Integer is_deleted;
     private Date buy_time;
     private Date maturity_time;
+
+
 }

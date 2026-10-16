@@ -2,14 +2,14 @@ package entity.UserS;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class User {
     private Integer id;
-    private LocalDateTime createTime;   // create_time
+    private Date createTime;   // create_time
     private Integer createBy;           // create_by
-    private LocalDateTime updateTime;   // update_time
+    private Date updateTime;   // update_time
     private Integer updateBy;           // update_by
     private Integer isDeleted;          // is_deleted 逻辑删除(0显示1隐藏)
 

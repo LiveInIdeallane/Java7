@@ -40,7 +40,7 @@ public class LoginController {
                 if (roleid == 1) {
                     SystemAdminMainView.menu();
                 }else if (roleid == 2) {
-                    HealthManagerMainView.menu();
+//                    HealthManagerMainView.menu();
                 }
                 return;
             } catch (Exception e) {

@@ -1,5 +1,6 @@
 package dao.CustomerS;
 
+import dao.CustomerS.CustomerDAO;
 import entity.CustomerS.Customer;
 import utils.CRUDUtils;
 import utils.JdbcUtils;
@@ -10,10 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
-
-    // ========================================================
-    // 组员风格（真实逻辑放这里，用 CRUDUtils）
-    // ========================================================
 
     @Override
     public boolean saveCustomer(Customer customer) throws SQLException {
@@ -74,8 +71,14 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public List<Customer> search(String customerName, String contact_tel, String idcard, String building_no)
-            throws SQLException, InstantiationException, IllegalAccessException {
+    public List<Customer> findByUserId(Integer userId) throws SQLException {
+        String sql = "SELECT * FROM customer WHERE user_id = ?";
+        Object[] object = {userId};
+        return CRUDUtils.select(sql, object, Customer.class);
+    }
+
+    @Override
+    public List<Customer> search(String customerName, String contact_tel, String idcard, String building_no) throws SQLException, InstantiationException, IllegalAccessException {
         String sql = "SELECT * FROM customer WHERE 1=1 ";
         List<Object> list = new ArrayList<>();
         if (customerName != null && !"".equals(customerName)) {
@@ -96,10 +99,6 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return CRUDUtils.select(sql, list.toArray(), Customer.class);
     }
-
-    // ========================================================
-    // 你的风格：5 个方法转调组员的
-    // ========================================================
 
     @Override
     public boolean save(Customer customer) throws SQLException {
@@ -122,6 +121,14 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
+    public Customer findByIdCard(String idcard) throws SQLException {
+        String sql = "SELECT * FROM customer WHERE idcard = ?";
+        Object[] object = {idcard};
+        List<Customer> customers = CRUDUtils.select(sql, object, Customer.class);
+        return customers.size() > 0 ? customers.get(0) : null;
+    }
+
+    @Override
     public List<Customer> findAll() throws SQLException {
         return findAllCustomers();
     }
@@ -130,10 +137,6 @@ public class CustomerDAOImpl implements CustomerDAO {
     // 你的其他查询（组员没有的，用 JDBC 直接写）
     // ========================================================
 
-    @Override
-    public Customer findByIdCard(String idcard) throws SQLException {
-        return queryOne("select * from customer where idcard=? and is_deleted=0", idcard);
-    }
 
     @Override
     public Customer findByBedId(Integer bedId) throws SQLException {
@@ -160,10 +163,6 @@ public class CustomerDAOImpl implements CustomerDAO {
         return queryList("select * from customer where level_id=? and is_deleted=0 order by id desc", levelId);
     }
 
-    @Override
-    public List<Customer> findByUserId(Integer userId) throws SQLException {
-        return queryList("select * from customer where user_id=? and is_deleted=0 order by id desc", userId);
-    }
 
     @Override
     public List<Customer> findPage(int offset, int limit) throws SQLException {

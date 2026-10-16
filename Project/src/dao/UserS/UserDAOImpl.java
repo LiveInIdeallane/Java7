@@ -1,6 +1,7 @@
 package dao.UserS;
 
 import entity.UserS.User;
+import utils.CRUDUtils;
 import utils.JdbcUtils;
 
 import java.sql.*;
@@ -106,7 +107,16 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User findByUsername(String username) {
-        return queryOne("select * from user where username=? and is_deleted=0", username);
+        String sql = "select * from user where username=?";
+        Object[] params = {username};
+        List<User> list = null;
+        try {
+            list = CRUDUtils.select(sql,params, User.class);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+//        queryOne("select * from user where username=? and is_deleted=0", username);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
@@ -208,9 +218,9 @@ public class UserDAOImpl implements UserDAO {
     private User mapRow(ResultSet rs) throws SQLException {
         User u = new User();
         u.setId(rs.getInt("id"));
-        u.setCreateTime(rs.getObject("create_time", LocalDateTime.class));
+        u.setCreateTime(rs.getObject("create_time", Date.class));
         u.setCreateBy(rs.getObject("create_by", Integer.class));
-        u.setUpdateTime(rs.getObject("update_time", LocalDateTime.class));
+        u.setUpdateTime(rs.getObject("update_time", Date.class));
         u.setUpdateBy(rs.getObject("update_by", Integer.class));
         u.setIsDeleted(rs.getInt("is_deleted"));
         u.setNickname(rs.getString("nickname"));
