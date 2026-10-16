@@ -42,6 +42,8 @@ public interface CustomerService {
     boolean assignCustomerToUser(Integer customerId, Integer userId);
     boolean removeCustomerFromUser(Integer customerId);
 
+
+
     Preference findPreferenceByCustomerId(Integer customerId);
     boolean savePreferences(Integer customerId, List<Preference> preferences);
     boolean deletePreferences(Integer customerId);

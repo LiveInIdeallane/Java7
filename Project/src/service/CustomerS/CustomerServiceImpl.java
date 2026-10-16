@@ -9,6 +9,7 @@ import dao.UserS.UserDAOImpl;
 import entity.CustomerS.Customer;
 import entity.PreferenceS.Preference;
 import entity.UserS.User;
+import utils.JdbcUtils;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -68,6 +69,28 @@ public class CustomerServiceImpl implements CustomerService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Customer> findByUserId(Integer userId) {
+
+        //查询某个管家服务的客户列表，只涉及一条查询语句
+        try {
+            JdbcUtils.getConnection().setAutoCommit(false);
+            List<Customer> customers = customerDAO.findByUserId(userId);
+            JdbcUtils.getConnection().commit();
+            return customers;
+        } catch (SQLException e) {
+            try {
+                JdbcUtils.getConnection().rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            throw new RuntimeException(e);
+        }finally {
+            JdbcUtils.close();
+        }
+
     }
 
     @Override
@@ -158,14 +181,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
-    @Override
-    public List<Customer> findByUserId(Integer userId) {
-        try {
-            return customerDAO.findByUserId(userId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public boolean assignCustomerToUser(Integer customerId, Integer userId) {
