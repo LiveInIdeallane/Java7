@@ -5,12 +5,14 @@ import dao.UserS.UserDAO;
 import dao.UserS.UserDAOImpl;
 import entity.UserS.User;
 
+import java.sql.SQLException;
+
 public class LoginServiceImpl implements LoginService {
 
     private final UserDAO userDao = new UserDAOImpl();
 
     @Override
-    public User login(String username, String password) {
+    public User login(String username, String password) throws SQLException {
         //DAO层查询用户
         User user = userDao.findByUsername(username);
         if(user == null){

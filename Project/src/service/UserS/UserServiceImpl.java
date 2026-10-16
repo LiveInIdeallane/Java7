@@ -7,6 +7,7 @@ import dao.UserS.UserDAOImpl;
 import entity.RoleS.Role;
 import entity.UserS.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
     // ===================== 增 =====================
 
     @Override
-    public boolean save(User user) {
+    public boolean save(User user) throws SQLException {
         // 1. 校验账号不重复
         if (userDAO.findByUsername(user.getUsername()) != null) {
             throw new RuntimeException("账号已存在：" + user.getUsername());
@@ -65,7 +66,12 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("用户不存在，id=" + user.getId());
         }
         // 校验账号不重复（排除自己）
-        User byUsername = userDAO.findByUsername(user.getUsername());
+        User byUsername = null;
+        try {
+            byUsername = userDAO.findByUsername(user.getUsername());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         if (byUsername != null && !byUsername.getId().equals(user.getId())) {
             throw new RuntimeException("账号已被占用：" + user.getUsername());
         }
@@ -97,7 +103,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String username, String password) {
-        User user = userDAO.findByUsername(username);
+        User user = null;
+        try {
+            user = userDAO.findByUsername(username);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         if (user == null) {
             throw new RuntimeException("账号不存在");
         }
@@ -109,7 +120,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        return userDAO.findByUsername(username);
+        try {
+            return userDAO.findByUsername(username);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

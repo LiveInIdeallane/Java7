@@ -2,6 +2,7 @@ package service.UserS;
 
 import entity.UserS.User;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
 public interface UserService {
 
     /** 新增用户（校验账号、手机号、邮箱不重复；密码默认手机号后6位） */
-    boolean save(User user);
+    boolean save(User user) throws SQLException;
 
     /** 修改用户（校验账号、手机号、邮箱不重复） */
     boolean update(User user);
