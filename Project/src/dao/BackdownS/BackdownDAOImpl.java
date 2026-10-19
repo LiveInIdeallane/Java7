@@ -15,7 +15,7 @@ public class BackdownDAOImpl implements BackdownDAO {
 
     @Override
     public boolean saveBackdown(Backdown backdown) throws SQLException {
-        String sql = "insert into backdown(id,remarks,id_deleted,customer_id,retreattime,retreattype,retreatreason,auditstatus,auditperson,audittime) values(?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into backdown(id,remarks,is_deleted,customer_id,retreattime,retreattype,retreatreason,auditstatus,auditperson,audittime) values(?,?,?,?,?,?,?,?,?,?)";
         Object[] params = {backdown.getId(),backdown.getRemarks(),backdown.getIs_delete(),backdown.getCustomer_id(),backdown.getRetreattime(),backdown.getRetreattype(),backdown.getRetreatreason(),backdown.getAuditstatus(),backdown.getAuditperson(),backdown.getAudittime()};
         return CRUDUtils.update(sql,params);
     }

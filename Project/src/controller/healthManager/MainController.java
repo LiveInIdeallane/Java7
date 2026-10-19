@@ -22,6 +22,7 @@ import service.CustomerS.CustomerService;
 import service.CustomerS.CustomerServiceImpl;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -106,7 +107,11 @@ public class MainController {
         System.out.print("邮箱："); u.setEmail(sc.nextLine());
         System.out.print("电话："); u.setPhoneNumber(sc.nextLine());
         System.out.print("角色ID："); u.setRoleId(Integer.parseInt(sc.nextLine()));
-        System.out.println(userService.save(u) ? "新增成功" : "新增失败");
+        try {
+            System.out.println(userService.save(u) ? "新增成功" : "新增失败");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void updateUser() {

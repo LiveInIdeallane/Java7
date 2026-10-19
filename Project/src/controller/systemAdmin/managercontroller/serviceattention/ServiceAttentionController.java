@@ -266,8 +266,8 @@ public class ServiceAttentionController {
     }
 
     private static long daysBetween(Date from, Date to) {
-        LocalDate a = from.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate b = to.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate a = java.time.Instant.ofEpochMilli(from.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate b = java.time.Instant.ofEpochMilli(to.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
         return ChronoUnit.DAYS.between(a, b);
     }
 

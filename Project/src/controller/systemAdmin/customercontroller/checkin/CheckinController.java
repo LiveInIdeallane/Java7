@@ -3,6 +3,7 @@ package controller.systemAdmin.customercontroller.checkin;
 import controller.systemAdmin.ConsoleTools;
 import controller.systemAdmin.support.CustomerManagementSupport;
 import entity.BedS.Bed;
+import entity.BedDetailsS.BedDetails;
 import entity.CustomerS.Customer;
 import service.BedDetailsS.BedDetailsService;
 import service.BedDetailsS.BedDetailsServiceImpl;
@@ -211,21 +212,36 @@ public class CheckinController {
         c.setCustomer_age(age);
         c.setCustomer_sex(Integer.valueOf(sex));
         c.setIdcard(idcard);
-        c.setBuilding_no(BUILDING_NO);
+        c.setBuilding_no(floorOf(rooms, roomNo));
         c.setRoom_no(roomNo);
         c.setBed_id(bedId);
         c.setCheckin_date(checkin);
         c.setExpiration_date(expiration);
         c.setContact_tel(tel);
         c.setBlood_type(bloodType);
-        c.setFamily_number(family);
+        c.setFilepath("");
+        c.setFamily_member(family);
         c.setBirthday(birthday);
         c.setPsychosomatic_state(state);
         c.setAttention(attention);
         c.setLevel_id(levelId);
         c.setUser_id(userId);
 
-        System.out.println(customerService.createCustomer(c) ? "入住登记成功！" : "入住登记失败！");
+        if (!customerService.createCustomer(c)) {
+            System.out.println("入住登记失败！");
+            return;
+        }
+        Customer saved = customerService.findByIdCard(idcard);
+        if (saved != null) {
+            BedDetails details = new BedDetails();
+            details.setCustomer_id(saved.getId());
+            details.setBed_id(bedId);
+            details.setStart_date(checkin);
+            details.setIs_deleted(0);
+            bedDetailsService.addBedDetails(details);
+            bedService.changeBedStatus(bedId, 2);
+        }
+        System.out.println("入住登记成功！");
     }
 
     private static void updateCustomer() {
@@ -248,7 +264,7 @@ public class CheckinController {
             c.setIdcard(ConsoleTools.keep("身份证号(" + old.getIdcard() + ")：", old.getIdcard()));
             c.setRoom_no(ConsoleTools.keep("房间号(" + old.getRoom_no() + ")：", old.getRoom_no()));
             c.setContact_tel(ConsoleTools.keep("联系电话(" + old.getContact_tel() + ")：", old.getContact_tel()));
-            c.setFamily_number(ConsoleTools.keep("家属(" + old.getFamily_number() + ")：", old.getFamily_number()));
+            c.setFamily_member(ConsoleTools.keep("家属(" + old.getFamily_member() + ")：", old.getFamily_member()));
             c.setBlood_type(ConsoleTools.keep("血型(" + old.getBlood_type() + ")：", old.getBlood_type()));
             c.setPsychosomatic_state(ConsoleTools.keep("身心状况：", old.getPsychosomatic_state()));
             c.setAttention(ConsoleTools.keep("注意事项：", old.getAttention()));
@@ -305,6 +321,15 @@ public class CheckinController {
         }
         bedDetailsService.logicDeleteActiveByCustomer(id);
         System.out.println("删除成功！");
+    }
+
+    private static String floorOf(Map<String, List<String>> rooms, String roomNo) {
+        for (Map.Entry<String, List<String>> entry : rooms.entrySet()) {
+            if (entry.getValue().contains(roomNo)) {
+                return entry.getKey();
+            }
+        }
+        return BUILDING_NO;
     }
 
     private static boolean containsRoom(Map<String, List<String>> rooms, String roomNo) {

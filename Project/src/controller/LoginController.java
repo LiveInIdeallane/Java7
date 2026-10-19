@@ -1,9 +1,11 @@
 package controller;
 
 import controller.systemAdmin.SystemAdminMainView;
+import controller.healthManager.NurseView;
 import entity.UserS.User;
 import service.UserS.UserService;
 import service.UserS.UserServiceImpl;
+import utils.Param;
 
 
 import java.util.Scanner;
@@ -34,13 +36,14 @@ public class LoginController {
             try {
                 User user = userService.login(username, password);
                 currentUser = user;
+                Param.loggingUser = user;
                 System.out.println("登录成功！欢迎您，" + user.getNickname());
                 //获取用户类型进行跳转到不同类型用户的主页菜单
                 Integer roleid = currentUser.getRoleId();
                 if (roleid == 1) {
                     SystemAdminMainView.menu();
                 }else if (roleid == 2) {
-//                    HealthManagerMainView.menu();
+                    NurseView.nurseMenu();
                 }
                 return;
             } catch (Exception e) {

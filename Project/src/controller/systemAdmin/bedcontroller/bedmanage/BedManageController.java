@@ -123,6 +123,15 @@ public class BedManageController {
         System.out.println(bedDetailsService.updateEndDate(id, end) ? "修改成功！" : "修改失败！");
     }
 
+    private static String floorOf(Map<String, List<String>> rooms, String roomNo) {
+        for (Map.Entry<String, List<String>> entry : rooms.entrySet()) {
+            if (entry.getValue().contains(roomNo)) {
+                return entry.getKey();
+            }
+        }
+        return BUILDING_NO;
+    }
+
     private static void changeBed() {
         int customerId = ConsoleTools.inputInt("请输入要调换床位的客户ID：");
         Customer c = customerService.findCustomerById(customerId);
@@ -183,7 +192,7 @@ public class BedManageController {
             System.out.println("床位调换失败！");
             return;
         }
-        c.setBuilding_no(BUILDING_NO);
+        c.setBuilding_no(floorOf(rooms, roomNo));
         c.setRoom_no(roomNo);
         c.setBed_id(newBedId);
         if (!customerService.updateCustomer(c)) {

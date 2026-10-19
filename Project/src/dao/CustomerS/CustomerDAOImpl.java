@@ -14,7 +14,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean saveCustomer(Customer customer) throws SQLException {
-        String sql = "insert into customer(is_deleted,customer_name,customer_age,customer_sex,idcard,room_no,building_no,checkin_date,expiration_date,contact_tel,bed_id,psychosomatic_state,attention,birthday,height,weight,blood_type,filepath,user_id,level_id,family_number) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into customer(is_deleted,customer_name,customer_age,customer_sex,idcard,room_no,building_no,checkin_date,expiration_date,contact_tel,bed_id,psychosomatic_state,attention,birthday,height,weight,blood_type,filepath,user_id,level_id,family_member) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Object[] object = {
                 customer.getIs_deleted(), customer.getCustomer_name(), customer.getCustomer_age(),
                 customer.getCustomer_sex(), customer.getIdcard(), customer.getRoom_no(),
@@ -23,14 +23,14 @@ public class CustomerDAOImpl implements CustomerDAO {
                 customer.getBed_id(), customer.getPsychosomatic_state(), customer.getAttention(),
                 toSqlDate(customer.getBirthday()), customer.getHeight(), customer.getWeight(),
                 customer.getBlood_type(), customer.getFilepath(), customer.getUser_id(),
-                customer.getLevel_id(), customer.getFamily_number()
+                customer.getLevel_id(), customer.getFamily_member()
         };
         return CRUDUtils.update(sql, object);
     }
 
     @Override
     public boolean updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE customer SET is_deleted = ?, customer_name = ?, customer_age = ?, customer_sex = ?, idcard = ?, room_no = ?, building_no = ?, checkin_date = ?, expiration_date = ?, contact_tel = ?, bed_id = ?, psychosomatic_state = ?, attention = ?, birthday = ?, height = ?, weight = ?, blood_type = ?, filepath = ?, user_id = ?, level_id = ?, family_number = ? where id = ?";
+        String sql = "UPDATE customer SET is_deleted = ?, customer_name = ?, customer_age = ?, customer_sex = ?, idcard = ?, room_no = ?, building_no = ?, checkin_date = ?, expiration_date = ?, contact_tel = ?, bed_id = ?, psychosomatic_state = ?, attention = ?, birthday = ?, height = ?, weight = ?, blood_type = ?, filepath = ?, user_id = ?, level_id = ?, family_member = ? where id = ?";
         Object[] object = {
                 customer.getIs_deleted(), customer.getCustomer_name(), customer.getCustomer_age(),
                 customer.getCustomer_sex(), customer.getIdcard(), customer.getRoom_no(),
@@ -39,7 +39,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 customer.getBed_id(), customer.getPsychosomatic_state(), customer.getAttention(),
                 toSqlDate(customer.getBirthday()), customer.getHeight(), customer.getWeight(),
                 customer.getBlood_type(), customer.getFilepath(), customer.getUser_id(),
-                customer.getLevel_id(), customer.getFamily_number(), customer.getId()
+                customer.getLevel_id(), customer.getFamily_member(), customer.getId()
         };
         return CRUDUtils.update(sql, object);
     }
@@ -72,7 +72,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public List<Customer> findByUserId(Integer userId) throws SQLException {
-        String sql = "SELECT * FROM customer WHERE user_id = ?";
+        String sql = "SELECT * FROM customer WHERE user_id = ? AND is_deleted = 0";
         Object[] object = {userId};
         return CRUDUtils.select(sql, object, Customer.class);
     }
@@ -257,7 +257,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         c.setFilepath(rs.getString("filepath"));
         c.setUser_id(rs.getObject("user_id", Integer.class));
         c.setLevel_id(rs.getObject("level_id", Integer.class));
-        c.setFamily_number(rs.getString("family_number"));
+        c.setFamily_member(rs.getString("family_member"));
         return c;
     }
 }
